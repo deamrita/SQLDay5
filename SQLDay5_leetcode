@@ -22,3 +22,27 @@ BEGIN
         
     );
 END
+
+--------------------Department highest salary-----------------
+select X.Department, X.Employee, X.Salary
+from
+(select d.name Department, e.name Employee,e.salary Salary,
+dense_rank() over(partition by d.name order by e.salary desc) rnk
+from
+Employee e
+inner join department d
+on e.departmentId = d.id)X
+where X.rnk = 1
+
+------------------to find all numbers that appear at least three times consecutively---------------------
+/* Write your T-SQL query statement below */
+
+select distinct(X.num) as ConsecutiveNums
+from
+(select num,
+    lag(num) over(order by id) as lag,
+    lead(num) over(order by id) as lead
+from Logs) X
+where num=X.lag
+and num=X.lead
+
